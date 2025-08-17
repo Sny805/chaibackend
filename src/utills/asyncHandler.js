@@ -1,10 +1,10 @@
 
 
-export const asyncHandlerfn = (requestHandler) => {
-    (req, res, next) => {
-        Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err))
-    }
-}
+// export const asyncHandlerfn = (requestHandler) => {
+//     return (req, res, next) => {
+//         Promise.resolve(requestHandler(req, res, next)).catch(next)
+//     }
+// }
 
 
 
@@ -17,7 +17,7 @@ export const asyncHandler = (fn) => {
         catch (error) {
             res.status(error.code || 500).json({
                 success: false,
-                message: error.message
+                message: error.message || "Internal Server Error"
             })
         }
     }
