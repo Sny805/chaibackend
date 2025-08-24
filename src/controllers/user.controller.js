@@ -183,8 +183,8 @@ export const logout = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user?._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             },
         }, {
         new: true
@@ -312,6 +312,11 @@ export const updateCoverImage = asyncHandler(async (req, res) => {
 
     if (!coverImage.secure_url) {
         throw new ApiError(400, "Error while uploading coverImage")
+    }
+
+    const currentUser = await User.findById(req.user._id);
+    if (currentUser?.coverImage) {
+        await deleteFromCloudinary(currentUser[coverImage]); // assumes your helper extracts public_id
     }
 
     const user = await User.findByIdAndUpdate(
